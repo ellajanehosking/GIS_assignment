@@ -1,0 +1,29 @@
+---
+title: "Mapcode"
+output: html_document
+date: "2026-03-01"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Sandprawn distribution and protection level
+
+Creating an interactive map of Krjrjgarjgo jwfrg observations in South Africa colour coded by ecosystem protection level.
+
+Reading in the data from iNaturalist. 
+```{r}
+library(rinat)
+
+```
+
+## Including Plots
+
+You can also embed plots, for example:
+
+```{r pressure, echo=FALSE}
+plot(pressure)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
