@@ -15,8 +15,8 @@ Creating an interactive map of *Kraussillichirus kraussi* observations in South 
 Reading in coastal protection data.
 
 ```{r}
-install.packages("sf")
 library(sf)
+cep <- st_read("NBA_benthic_and_coastal_protection.shp")
 ```
 
 Reading in the data from iNaturalist.
@@ -27,10 +27,27 @@ sp <- get_inat_obs(taxon_name = "Kraussillichirus kraussi", bounds = c(-35, 17.5
 head(sp)
 ```
 
-Filtering the results for research grade observations and positional accuracy.
+Filtering the results for research grade observations and positional accuracy. Converting the dataframe to a spatial object.
 
 ```{r}
 library(tidyverse)
 sp <- sp %>% filter(positional_accuracy<46 & latitude<0 & !is.na(latitude) & quality_grade == "research")
 
+#converting into spatial object
+
+sp <- st_as_sf(sp, coords = c("longitude", "latitude"), crs = 4326)
+
 ```
+
+Creating an interactive map.
+
+```{r}
+
+library(leaflet)
+library(htmltools)
+
+leaflet() %>% addTiles(group = "Default") %>% addCircleMarkers(data = sp, group = "Kraussillichirus kraussi", radius = 3, color = "green") 
+```
+
+
+
