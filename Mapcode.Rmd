@@ -17,6 +17,9 @@ Reading in coastal protection data.
 ```{r}
 library(sf)
 cep <- st_read("NBA_benthic_and_coastal_protection.shp")
+st_crs(cep)
+head(cep)
+plot(cep["PA_level"])
 ```
 
 Reading in the data from iNaturalist.
@@ -49,5 +52,6 @@ library(htmltools)
 leaflet() %>% addTiles(group = "Default") %>% addCircleMarkers(data = sp, group = "Kraussillichirus kraussi", radius = 3, color = "green") 
 ```
 
+```{r}
 
-
+```
