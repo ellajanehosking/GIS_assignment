@@ -12,7 +12,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 Creating an interactive map of *Kraussillichirus kraussi* observations in South Africa colour coded by ecosystem protection level.
 
-Reading in coastal protection data.
+#### Reading in coastal protection data.
 
 ```{r}
 library(sf)
@@ -22,7 +22,7 @@ head(cep)
 plot(cep["PA_level"])
 ```
 
-Reading in the data from iNaturalist.
+#### Reading in the data from iNaturalist.
 
 ```{r}
 library(rinat)
@@ -42,16 +42,28 @@ sp <- st_as_sf(sp, coords = c("longitude", "latitude"), crs = 4326)
 
 ```
 
-Creating an interactive map.
+#### Intersecting points with polygons.
 
 ```{r}
 
-library(leaflet)
-library(htmltools)
+sp  <- st_make_valid(sp)
+cep <- st_make_valid(cep)
 
-leaflet() %>% addTiles(group = "Default") %>% addCircleMarkers(data = sp, group = "Kraussillichirus kraussi", radius = 3, color = "green") 
+sp2 <- st_intersection(sp, cep)
 ```
 
-```{r}
+Colour coding points in an interactive map with clickable url links.
 
+```{r}
+library(leaflet)
+library(leafpop)
+library(tidyverse)
+
+#creating a colour palette
+pal <- colorFactor(palette = c("darkblue", "green", "purple", "darkgreen", "orange"), domain = sp2$PA_level)
+#clickable urls 
+lsp2 <- sp2 %>%
+  mutate(click_url = paste("<b><a href='", url, "'>Link to iNat observation</a></b>"))
+
+leaflet(sp2) %>% addTiles() %>% addCircleMarkers(radius = 5, fillColor = ~pal(PA_level), fillOpacity = 0.8, stroke = FALSE, popup = popupTable(lsp2, zcol = c("user_login", "click_url"))) %>% addLegend( "bottomright", pal = pal, values = ~PA_level, title = "Protection Level")
 ```
